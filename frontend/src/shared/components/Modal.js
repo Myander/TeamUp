@@ -20,16 +20,15 @@ export const Button = props => (
   </button>
 );
 
-export const Form = props => {
-  const handleSubmit = e => {
-    e.preventDefault();
-  };
+export const Modal = props => {
+  const { openModal } = props;
   return (
-    <form
-      onSubmit={handleSubmit}
-      className={`bg-white text-center rounded py-8 px-5 shadow max-w-xs mx-auto my-4`}
+    <div
+      className={`${
+        openModal ? 'visible' : 'invisible'
+      } absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2`}
     >
       {props.children}
-    </form>
+    </div>
   );
 };

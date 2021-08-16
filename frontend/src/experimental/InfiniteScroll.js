@@ -1,17 +1,19 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Game, GameLoading } from '../components/Game';
-import Loader from '../../shared/components/Loader';
-import useInfiniteScroll from '../../shared/hooks/infiniteScroll-hook';
-import PageContainer from '../../shared/components/PageContainer';
+import { Game, GameLoading } from '../teams/components/Game';
+import Loader from '../shared/components/Loader';
 
-const GameDirectory = () => {
+const InfiniteScroll = () => {
   const [games, setGames] = useState([]);
   const isLoading = useRef(false);
   const [next, setNext] = useState('');
+  const targetRef = useRef();
 
-  const fetchMoreGames = useCallback(() => {
-    if (!isLoading.current) {
+  const cb = useCallback(entries => {
+    const target = entries[0];
+
+    if (target.isIntersecting && !isLoading.current) {
+      console.log('making request');
       const options = {
         method: 'GET',
         url: next,
@@ -32,9 +34,7 @@ const GameDirectory = () => {
           console.log(err);
         });
     }
-  }, [next]);
-
-  const { targetRef } = useInfiniteScroll(fetchMoreGames);
+  });
 
   useEffect(() => {
     const options = {
@@ -55,23 +55,32 @@ const GameDirectory = () => {
       });
   }, []);
 
+  useEffect(() => {
+    let options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.25,
+    };
+
+    let observer = new IntersectionObserver(cb, options);
+    observer.observe(targetRef.current);
+    return () => observer.unobserve(targetRef.current);
+  }, [targetRef, cb]);
+
   return (
-    <PageContainer>
+    <>
       <div className="flex flex-wrap justify-center max-w-6xl mx-auto py-4">
         {games.length
-          ? games.map(game => <Game key={game.id} game={game} />)
-          : new Array(25)
+          ? games.map((game, index) => <Game key={index} game={game} />)
+          : Array(25)
               .fill(0)
               .map((item, index) => <GameLoading key={index} />)}
-        {/* {new Array(25).fill(0).map((item, index) => (
-          <GameLoading key={index} />
-        ))} */}
       </div>
       <div ref={targetRef}>
         <Loader />
       </div>
-    </PageContainer>
+    </>
   );
 };
 
-export default GameDirectory;
+export default InfiniteScroll;

@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
+import { AuthContext } from '../../shared/context/auth-context';
 import { Input } from '../components/Inputs';
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
+  const auth = useContext(AuthContext);
+
   const {
     register,
     handleSubmit,
@@ -12,19 +15,17 @@ export default function Login() {
   } = useForm();
 
   const onSubmit = data => {
-    console.log(data);
+    // console.log(data);
     setLoading(true);
     axios
-      .post('http://localhost:5000/api/users/signup', {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        userName: data.userName,
+      .post('http://localhost:5000/api/users/login', {
         email: data.email,
         password: data.password,
       })
       .then(res => {
-        console.log(res);
+        console.log(res.data);
         setLoading(false);
+        auth.login(res.data.userId, res.data.token);
       })
       .catch(err => {
         console.log(err);
@@ -38,44 +39,17 @@ export default function Login() {
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white text-center rounded py-8 px-5 shadow max-w-xs mx-auto my-4"
       >
-        {errors.firstName && <p>{errors.firstName.message}</p>}
-
-        <Input
-          placeholder="Firstname"
-          {...register('firstName', { required: 'Firstname required.' })}
-        />
-        {errors.lastName && <p>{errors.lastName.message}</p>}
-
-        <Input
-          placeholder="Lastname"
-          {...register('lastName', { required: 'Lastname required.' })}
-        />
-        {errors.userName && <p>{errors.userName.message}</p>}
-
-        <Input
-          placeholder="Username"
-          {...register('userName', { required: 'Username required.' })}
-        />
         {errors.email && <p>{errors.email.message}</p>}
         <Input
           placeholder="Email"
-          {...register('email', {
-            required: 'email required',
-          })}
+          {...register('email', { required: 'Email required.' })}
         />
 
-        {errors.password && (
-          <p>
-            {errors.password.type === 'minLength'
-              ? 'minimum length is 5 characters'
-              : errors.password.message}
-          </p>
-        )}
+        {errors.password && <p>{errors.password.message}</p>}
         <Input
           placeholder="Password"
           type="password"
           {...register('password', {
-            minLength: 5,
             required: 'password required.',
           })}
         />
@@ -88,7 +62,7 @@ export default function Login() {
           text-white font-bold py-2 px-4 mx-4 mt-2 rounded transition duration-500 ease-out 
           transform hover:translate-y-1 hover:scale-110 active:scale-100 active:-translate-y-0"
         >
-          Signup
+          Login
         </button>
       </form>
     </div>

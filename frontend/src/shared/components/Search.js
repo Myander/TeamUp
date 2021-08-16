@@ -1,11 +1,12 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState } from 'react';
 import _ from 'lodash';
 import axios from 'axios';
+import useClickOutside from '../../shared/hooks/clickOutside-hook';
 
 const Search = () => {
-  const containerRef = useRef();
-  const [dropdown, setDropdown] = useState('invisible');
   const [games, setGames] = useState([]);
+  const { containerRef, handleClickInside, clickOutside } = useClickOutside();
+
   const handleChange = e => {
     const options = {
       method: 'GET',
@@ -22,51 +23,27 @@ const Search = () => {
       });
   };
 
-  const handleFocus = () => {
-    console.log('focused');
-    setDropdown('visible');
-  };
-
-  const handleClickOutSide = useCallback(
-    event => {
-      const target = event.target;
-      if (containerRef.current && containerRef.current.contains(target)) {
-        return;
-      }
-      setDropdown('invisible');
-    },
-    [setDropdown]
-  );
-
-  useEffect(() => {
-    if (dropdown === 'visible') {
-      document.addEventListener('click', handleClickOutSide, false);
-    } else {
-      document.removeEventListener('click', handleClickOutSide, false);
-    }
-    return () => {
-      document.removeEventListener('click', handleClickOutSide, false);
-    };
-  }, [dropdown, handleClickOutSide]);
-
   const SearchItem = ({ image, title }) => (
     <div className={`flex hover:bg-gray-600 my-0.5 cursor-pointer`}>
       <div className="flex-shrink-0 mr-1">
-        <img
-          className="h-8 w-8 mx-1 object-cover bg-red-400"
-          src={image}
-          alt={title}
-        />
+        <img className="h-8 w-8 mx-1 object-cover" src={image} alt={title} />
       </div>
       <div className="text-xl font-medium text-black">{title}</div>
     </div>
   );
 
+  // const SearchItemLoading = () => (
+  //   <div className="flex space-x-2 animate-pulse my-2">
+  //     <div className="h-8 w-8 bg-gray-300" />
+  //     <div className="h-4 w-36 bg-gray-300" />
+  //   </div>
+  // );
+
   return (
     <div
       ref={containerRef}
       className="relative inline-block mx-3"
-      onClick={handleFocus}
+      onClick={handleClickInside}
     >
       <input
         onChange={_.debounce(handleChange, 300, {
@@ -76,11 +53,13 @@ const Search = () => {
         // onBlur={handleBlur}
         placeholder="Search"
         className="block border border-transparent focus:outline-none rounded
-      focus:ring-2 focus:ring-purple-600 focus:border-transparent 
-      shadow-inner bg-gray-100 w-96 p-1"
+      focus:ring-2 focus:ring-blue-600 focus:border-transparent 
+      shadow-inner bg-gray-100 w-96 p-1 dark:bg-gray-500"
       ></input>
       <div
-        className={`absolute bg-gray-400 rounded shadow-sm p-1 w-96 my-0.5 ${dropdown}`}
+        className={`absolute bg-gray-400 rounded shadow-sm p-1 w-96 my-0.5 z-50 ${
+          clickOutside ? 'invisible' : 'visible'
+        }`}
       >
         {games.length ? (
           games.map(game => (
@@ -91,7 +70,7 @@ const Search = () => {
             />
           ))
         ) : (
-          <div>loading..</div>
+          <div>Search for a game!</div>
         )}
       </div>
     </div>

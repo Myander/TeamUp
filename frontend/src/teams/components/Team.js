@@ -1,0 +1,23 @@
+import React from 'react';
+import { ReactComponent as PersonIcon } from '../../icons/person_outline_black_24dp.svg';
+import { SmallButton } from '../../shared/components/Buttons';
+
+const Team = ({ team }) => {
+  return (
+    <div className="mx-2 my-4 w-64 cursor-pointer shadow rounded px-5 py-7">
+      <div className="truncate font-semibold text-2xl dark:text-white mb-2">
+        {team.title}
+      </div>
+      <div className="text-gray-500 text-lg mb-4">{team.description}</div>
+      <div className="flex justify-between">
+        <div className="flex flex-col">
+          <PersonIcon />
+          <div className="text-center">{team.members.length}</div>
+        </div>
+        <SmallButton>Join</SmallButton>
+      </div>
+    </div>
+  );
+};
+
+export default Team;

@@ -11,6 +11,7 @@
     "lodash": "^4.17.21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-hook-form": "^7.12.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "styled-components": "^5.2.3",
@@ -46,6 +47,7 @@
     "babel-plugin-macros": "^3.0.1",
     "postcss": "^7.0.35",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",
+    "tailwindcss-pseudo-elements": "^2.0.0",
     "twin.macro": "^2.4.1"
   }
 }
