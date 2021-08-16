@@ -27,7 +27,7 @@ const getTeamById = async (req, res, next) => {
   res.json({ team: team.toObject({ getters: true }) });
 };
 
-/* ------------------------------- GET TEAM BY ID ------------------------------- */
+/* ------------------------------- GET TEAM BY USER ID -------------------------- */
 const getTeamsByUserId = async (req, res, next) => {
   const userId = req.params.uid;
   let userWithTeams;
@@ -48,6 +48,34 @@ const getTeamsByUserId = async (req, res, next) => {
   }
 
   res.json({ user: userWithTeams.toObject({ getters: true }) });
+};
+
+/* ------------------------------- GET TEAMS BY GAME ----------------------------- */
+
+const getTeamsByGameName = async (req, res, next) => {
+  let gameName = req.params.game;
+  gameName = gameName.split('-').join(' ');
+  // console.log('game name', gameName);
+  let teams;
+  try {
+    teams = await Team.find({ game: gameName });
+  } catch (err) {
+    console.log(err);
+    return next(
+      new HttpError('Something went wrong retrieving teams by game name.', 500)
+    );
+  }
+
+  if (!teams) {
+    return next(
+      new HttpError(
+        ' Could not find any teams for the provided game name.',
+        404
+      )
+    );
+  }
+  // console.log(teams);
+  res.json({ teams: teams.map(team => team.toObject({ getters: true })) });
 };
 
 /* ------------------------------- CREATE TEAM ------------------------------- */
@@ -148,15 +176,8 @@ const updateTeam = async (req, res, next) => {
 
   const tid = req.params.tid;
 
-  const {
-    title,
-    description,
-    owner,
-    game,
-    scheduled,
-    private,
-    members,
-  } = req.body;
+  const { title, description, owner, game, scheduled, private, members } =
+    req.body;
 
   let team;
   try {
@@ -195,5 +216,6 @@ const updateTeam = async (req, res, next) => {
 exports.createTeam = createTeam;
 exports.getTeamById = getTeamById;
 exports.getTeamsByUserId = getTeamsByUserId;
+exports.getTeamsByGameName = getTeamsByGameName;
 exports.deleteTeam = deleteTeam;
 exports.updateTeam = updateTeam;

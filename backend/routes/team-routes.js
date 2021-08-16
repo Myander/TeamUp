@@ -9,6 +9,8 @@ router.get('/:tid', teamControllers.getTeamById);
 
 router.get('/user/:uid', teamControllers.getTeamsByUserId);
 
+router.get('/name/:game', teamControllers.getTeamsByGameName);
+
 router.use(checkAuth);
 
 router.post(
