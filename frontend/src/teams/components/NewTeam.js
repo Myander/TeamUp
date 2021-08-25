@@ -1,15 +1,33 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { AuthContext } from '../../shared/context/auth-context';
-import { Input } from '../../user/components/Inputs';
+import { AuthContext } from 'shared/context/auth-context';
+import { Input } from 'user/components/Inputs';
+import { ReactComponent as CloseIcon } from 'icons/close_black_24dp.svg';
 
-const NewTeam = ({ game }) => {
+const NewTeam = ({ game, handleClose, addNewTeam }) => {
   const auth = useContext(AuthContext);
+  const formRef = useRef();
   const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitSuccessful },
+    reset,
+  } = useForm({
+    defaultValues: { title: '', description: '', status: 'open' },
+  });
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset({ title: '', description: '', status: 'open' });
+      handleClose(false);
+    }
+  }, [isSubmitSuccessful, handleClose, reset]);
 
   const onSubmit = data => {
     setLoading(true);
+    console.log('data', data, game);
     axios
       .post(
         'http://localhost:5000/api/teams/',
@@ -17,7 +35,7 @@ const NewTeam = ({ game }) => {
           title: data.title,
           description: data.description,
           game: game,
-          private: data.invite ? true : false,
+          private: data.status === 'invite' ? true : false,
         },
         {
           headers: {
@@ -26,8 +44,10 @@ const NewTeam = ({ game }) => {
         }
       )
       .then(res => {
-        console.log(res.data);
+        console.log(res.data.team);
         setLoading(false);
+        addNewTeam(res.data.team);
+        formRef.current.reset();
       })
       .catch(err => {
         console.log(err);
@@ -35,18 +55,19 @@ const NewTeam = ({ game }) => {
       });
   };
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
   return (
     <div className="py-10 mx-auto">
       <form
+        ref={formRef}
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white text-center rounded py-8 px-5 shadow max-w-xs mx-auto my-4"
+        className="bg-white dark:bg-gray-900 dark:text-gray-50 text-center rounded pb-8 pt-2 px-5 shadow max-w-xs mx-auto"
       >
+        <div className="flex justify-end">
+          <CloseIcon
+            className="cursor-pointer"
+            onClick={handleClose.bind(null, false)}
+          />
+        </div>
         <div className="mb-4 w-full py-2 px-4">{game}</div>
         {errors.title && <p>{errors.title.message}</p>}
         <Input

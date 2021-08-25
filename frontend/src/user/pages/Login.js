@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { AuthContext } from '../../shared/context/auth-context';
-import { Input } from '../components/Inputs';
+import { AuthContext } from 'shared/context/auth-context';
+import { Input } from 'user/components/Inputs';
 
 export default function Login() {
   const [loading, setLoading] = useState(false);

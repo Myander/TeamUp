@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { Input } from '../components/Inputs';
+import { Input } from 'user/components/Inputs';
 
 export default function Login() {
   const [loading, setLoading] = useState(false);

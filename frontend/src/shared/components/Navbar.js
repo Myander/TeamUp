@@ -3,12 +3,12 @@ import { DefaultButton } from './Buttons';
 import Dropdown from './Dropdown';
 import PageLink from './PageLink';
 import Search from './Search';
-import Toggle from './Toggle';
-import { AuthContext } from '../context/auth-context';
+import { Toggle } from './Toggle';
+import { AuthContext } from 'shared/context/auth-context';
 
 const Navbar = () => {
   const auth = useContext(AuthContext);
-  console.log(auth);
+
   return (
     <div
       className={`flex justify-between items-center py-2 px-8 shadow dark:bg-gray-800`}

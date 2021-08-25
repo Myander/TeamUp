@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 const useThemeChanger = () => {
-  const [dark, setDark] = useState(null);
+  const [dark, setDark] = useState(false);
 
   const toggleTheme = () => {
     setDark(prev => {
@@ -16,13 +16,25 @@ const useThemeChanger = () => {
       (!('theme' in localStorage) &&
         window.matchMedia('(prefers-color-scheme: dark)').matches)
     ) {
+      setDark(true);
+    } else {
+      setDark(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (
+      localStorage.theme === 'dark' ||
+      (!('theme' in localStorage) &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
   }, [dark]);
 
-  return { toggleTheme };
+  return { toggleTheme, dark };
 };
 
 export default useThemeChanger;

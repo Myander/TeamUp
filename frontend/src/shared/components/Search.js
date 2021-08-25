@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
 import axios from 'axios';
-import useClickOutside from '../../shared/hooks/clickOutside-hook';
+import useClickOutside from 'shared/hooks/clickOutside-hook';
 
 const Search = () => {
   const [games, setGames] = useState([]);

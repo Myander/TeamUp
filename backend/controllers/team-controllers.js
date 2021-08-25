@@ -54,11 +54,22 @@ const getTeamsByUserId = async (req, res, next) => {
 
 const getTeamsByGameName = async (req, res, next) => {
   let gameName = req.params.game;
+  let limit = 20;
+  let page = req.query.page ? +req.query.page : 1;
+  let count, teams;
   gameName = gameName.split('-').join(' ');
-  // console.log('game name', gameName);
-  let teams;
+
   try {
-    teams = await Team.find({ game: gameName });
+    count = await Team.find().estimatedDocumentCount();
+  } catch (err) {
+    console.log(err);
+  }
+
+  try {
+    teams = await Team.find({ game: gameName })
+      .sort({ title: 'asc' }) // sort by date ?, maybe give option for user
+      .skip((page - 1) * limit)
+      .limit(limit);
   } catch (err) {
     console.log(err);
     return next(
@@ -75,7 +86,10 @@ const getTeamsByGameName = async (req, res, next) => {
     );
   }
   // console.log(teams);
-  res.json({ teams: teams.map(team => team.toObject({ getters: true })) });
+  res.json({
+    teams: teams.map(team => team.toObject({ getters: true })),
+    count,
+  });
 };
 
 /* ------------------------------- CREATE TEAM ------------------------------- */

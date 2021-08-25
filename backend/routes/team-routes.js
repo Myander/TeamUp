@@ -9,7 +9,7 @@ router.get('/:tid', teamControllers.getTeamById);
 
 router.get('/user/:uid', teamControllers.getTeamsByUserId);
 
-router.get('/name/:game', teamControllers.getTeamsByGameName);
+router.get('/game/:game', teamControllers.getTeamsByGameName);
 
 router.use(checkAuth);
 
@@ -17,7 +17,7 @@ router.post(
   '/',
   [
     check('title').not().isEmpty(),
-    check('description').isLength({ min: 5 }),
+    check('description').not().isEmpty(),
     check('game').not().isEmpty(),
     check('private').toBoolean(),
   ],

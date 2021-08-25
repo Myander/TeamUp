@@ -1,5 +1,5 @@
 import React from 'react';
-import useClickOutside from '../hooks/clickOutside-hook';
+import useClickOutside from 'shared/hooks/clickOutside-hook';
 
 const Dropdown = props => {
   const { containerRef, clickOutside, toggleClickInside } = useClickOutside();
@@ -13,7 +13,7 @@ const Dropdown = props => {
       <div
         className={`${
           !clickOutside ? 'block' : 'hidden'
-        } absolute z-10 shadow w-24 min-w-full bg-gray-100 p-4 right-0 dark:bg-gray-500 rounded-sm`}
+        } absolute z-10 shadow min-w-full bg-gray-100 p-4 right-0 dark:bg-gray-500 rounded-sm`}
       >
         {props.children}
       </div>

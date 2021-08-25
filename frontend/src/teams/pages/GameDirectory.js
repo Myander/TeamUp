@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { Game, GameLoading } from '../components/Game';
-import Loader from '../../shared/components/Loader';
-import useInfiniteScroll from '../../shared/hooks/infiniteScroll-hook';
-import PageContainer from '../../shared/components/PageContainer';
+import { Game, GameLoading } from 'teams/components/Game';
+import Loader from 'shared/components/Loader';
+import useInfiniteScroll from 'shared/hooks/infiniteScroll-hook';
+import PageContainer from 'shared/components/PageContainer';
 
 const GameDirectory = () => {
   const [games, setGames] = useState([]);

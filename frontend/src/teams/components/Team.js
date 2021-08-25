@@ -1,8 +1,8 @@
 import React from 'react';
-import { ReactComponent as PersonIcon } from '../../icons/person_outline_black_24dp.svg';
-import { SmallButton } from '../../shared/components/Buttons';
+import { ReactComponent as PersonIcon } from 'icons/person_outline_black_24dp.svg';
+import { SmallButton } from 'shared/components/Buttons';
 
-const Team = ({ team }) => {
+export const Team = ({ team }) => {
   return (
     <div className="mx-2 my-4 w-64 cursor-pointer shadow rounded px-5 py-7">
       <div className="truncate font-semibold text-2xl dark:text-white mb-2">
@@ -20,4 +20,18 @@ const Team = ({ team }) => {
   );
 };
 
-export default Team;
+export const TeamLoading = () => {
+  return (
+    <div className="mx-2 my-4 w-64 animate-pulse shadow rounded px-5 py-7">
+      <div className="h-4 w-44 bg-gray-300 dark:bg-gray-500"></div>
+      <div className="h-4 my-4 bg-gray-300 dark:bg-gray-500"></div>
+      <div className="flex justify-between">
+        <div className="flex flex-col w-6">
+          <div className="h-6 bg-gray-300 dark:bg-gray-500"></div>
+          <div className="h-6 mt-2 bg-gray-300 dark:bg-gray-500"></div>
+        </div>
+        <div className="h-6 w-8 mt-6 bg-gray-300 dark:bg-gray-500"></div>
+      </div>
+    </div>
+  );
+};
