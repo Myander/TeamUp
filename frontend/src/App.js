@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -16,14 +16,48 @@ import { useAuth } from 'shared/hooks/auth-hook';
 
 function App() {
   const { login, logout, userToken, userId } = useAuth();
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  let routes;
 
-  // let routes;
+  // const UserData = JSON.parse(localStorage.getItem('userData'));
+  // const isLoggedIn = UserData ? UserData.isLoggedIn : false;
+  useEffect(() => {
+    console.log('userToken', userToken);
+  }, [userToken]);
 
-  // if (isLoggedIn) {
-  //   routes = ();
-  // } else {
-  //   routes = ();
-  // }
+  // console.log('isLoggedIn: ', isLoggedIn);
+
+  if (!!userToken) {
+    routes = (
+      <Switch>
+        <Route exact path="/">
+          <GameDirectory />
+        </Route>
+        <Route path="/teams/:name">
+          <TeamPage />
+        </Route>
+        <Redirect to="/" />
+      </Switch>
+    );
+  } else {
+    routes = (
+      <Switch>
+        <Route exact path="/">
+          <GameDirectory />
+        </Route>
+        <Route path="/teams/:name">
+          <TeamPage />
+        </Route>
+        <Route path="/signup">
+          <SignUp />
+        </Route>
+        <Route path="/login">
+          <Login />
+        </Route>
+        <Redirect to="/login" />
+      </Switch>
+    );
+  }
 
   return (
     <AuthContext.Provider
@@ -37,21 +71,7 @@ function App() {
     >
       <Router>
         <Navbar />
-        <Switch>
-          <Route exact path="/">
-            <GameDirectory />
-          </Route>
-          <Route path="/signup">
-            <SignUp />
-          </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/teams/:name">
-            <TeamPage />
-          </Route>
-          <Redirect to="/" />
-        </Switch>
+        {routes}
       </Router>
     </AuthContext.Provider>
   );

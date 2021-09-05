@@ -3,8 +3,8 @@ import { DefaultButton } from './Buttons';
 import Dropdown from './Dropdown';
 import PageLink from './PageLink';
 import Search from './Search';
-import { Toggle } from './Toggle';
 import { AuthContext } from 'shared/context/auth-context';
+import UserMenu from 'user/components/UserMenu';
 
 const Navbar = () => {
   const auth = useContext(AuthContext);
@@ -30,7 +30,7 @@ const Navbar = () => {
         )}
         {auth.isLoggedIn && (
           <Dropdown>
-            <Toggle />
+            <UserMenu />
           </Dropdown>
         )}
       </div>

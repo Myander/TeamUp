@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { AuthContext } from 'shared/context/auth-context';
 import { Input } from 'user/components/Inputs';
-import { ReactComponent as CloseIcon } from 'icons/close_black_24dp.svg';
+import { CloseIcon } from 'icons/Icons';
 
 const NewTeam = ({ game, handleClose, addNewTeam }) => {
   const auth = useContext(AuthContext);
@@ -63,10 +63,15 @@ const NewTeam = ({ game, handleClose, addNewTeam }) => {
         className="bg-white dark:bg-gray-900 dark:text-gray-50 text-center rounded pb-8 pt-2 px-5 shadow max-w-xs mx-auto"
       >
         <div className="flex justify-end">
-          <CloseIcon
+          <div
             className="cursor-pointer"
             onClick={handleClose.bind(null, false)}
-          />
+          >
+            <CloseIcon
+              className="cursor-pointer"
+              onClick={handleClose.bind(null, false)}
+            />
+          </div>
         </div>
         <div className="mb-4 w-full py-2 px-4">{game}</div>
         {errors.title && <p>{errors.title.message}</p>}
@@ -82,10 +87,14 @@ const NewTeam = ({ game, handleClose, addNewTeam }) => {
         {errors.status && <p>{errors.title.status}</p>}
         <select
           {...register('status')}
-          className="border-gray-300 mb-4 w-full border-solid border rounded py-2 px-4 text-gray-400"
+          className="border-gray-300 dark:bg-gray-500 dark:text-gray-50 mb-4 w-full border-solid border rounded py-2 px-3 text-gray-400"
         >
-          <option value="open">Open to all</option>
-          <option value="invite">Invite only</option>
+          <option value="open" className="px-4">
+            Open to all
+          </option>
+          <option value="invite" className="px-4">
+            Invite only
+          </option>
         </select>
         <button
           type="submit"

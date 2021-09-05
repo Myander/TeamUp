@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { Button } from 'shared/components/Buttons';
 import { Modal } from 'shared/components/Modal';
 import PageContainer from 'shared/components/PageContainer';
@@ -8,8 +8,10 @@ import { Teams, TeamsLoading } from 'teams/components/Teams';
 import axios from 'axios';
 import Loader from 'shared/components/Loader';
 import useInfiniteScroll from 'shared/hooks/infiniteScroll-hook';
+import { AuthContext } from 'shared/context/auth-context';
 
 const TeamPage = () => {
+  const auth = useContext(AuthContext);
   const [openModal, setOpenModal] = useState(false);
   const [teams, setTeams] = useState([]);
   const [page, setPage] = useState(1);
@@ -20,9 +22,9 @@ const TeamPage = () => {
 
   const addNewTeam = team => {
     setTeams(currTeams => {
-      const updateTeams = [...currTeams];
-      updateTeams.push(team);
-      return updateTeams;
+      const updatedTeams = [...currTeams];
+      updatedTeams.push(team);
+      return updatedTeams;
     });
   };
 
@@ -54,7 +56,7 @@ const TeamPage = () => {
       .catch(err => {
         console.log(err);
       });
-  }, [game, name]);
+  }, [name]);
 
   const handleClick = () => {
     setOpenModal(prevState => !prevState);
@@ -63,7 +65,7 @@ const TeamPage = () => {
   return (
     <PageContainer>
       <div className="flex items-center p-4">
-        <Button handleClick={handleClick}>New Team</Button>
+        {auth.isLoggedIn && <Button handleClick={handleClick}>New Team</Button>}
       </div>
       <Modal openModal={openModal}>
         <NewTeam
@@ -72,9 +74,21 @@ const TeamPage = () => {
           addNewTeam={addNewTeam}
         />
       </Modal>
-      {/* <TeamsLoading /> */}
-      {teams.length ? <Teams teams={teams} /> : <TeamsLoading />}
-      <div ref={targetRef}>{teamsArraylength < totalTeams && <Loader />}</div>
+      {teams.length ? (
+        <Teams
+          teams={teams}
+          isLoggedIn={auth.isLoggedIn}
+          token={auth.token}
+          userId={auth.userId}
+        />
+      ) : (
+        <TeamsLoading />
+      )}
+      <div ref={targetRef}>
+        {teamsArraylength < totalTeams && (
+          <Loader height={8} width={10} mb={4} />
+        )}
+      </div>
     </PageContainer>
   );
 };

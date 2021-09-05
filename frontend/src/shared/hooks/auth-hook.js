@@ -10,8 +10,10 @@ export const useAuth = () => {
   const login = useCallback((uid, token, expirationDate) => {
     setUserToken(token);
     setUserId(uid);
+
     const tokenExpirationDate =
       expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
+
     setTokenExpirationDate(tokenExpirationDate);
     localStorage.setItem(
       'userData',
@@ -19,9 +21,11 @@ export const useAuth = () => {
         userId: uid,
         token: token,
         expiration: tokenExpirationDate.toISOString(),
+        isLoggedIn: !!token,
       })
     );
   }, []);
+
   const logout = useCallback(() => {
     setUserToken(null);
     setUserId(null);

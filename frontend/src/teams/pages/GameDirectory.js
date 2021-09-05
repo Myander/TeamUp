@@ -45,7 +45,7 @@ const GameDirectory = () => {
     axios
       .request(options)
       .then(res => {
-        console.log(res.data);
+        // console.log(res.data);
         setGames(res.data.results);
         setNext(res.data.next);
         isLoading.current = false;
@@ -68,7 +68,7 @@ const GameDirectory = () => {
         ))} */}
       </div>
       <div ref={targetRef}>
-        <Loader />
+        <Loader height={8} width={10} mb={0} />
       </div>
     </PageContainer>
   );

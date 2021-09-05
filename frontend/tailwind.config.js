@@ -8,6 +8,9 @@ module.exports = {
     extend: {
       scale: ['active'],
       translate: ['active'],
+      opacity: ['disabled'],
+      cursor: ['disabled'],
+      backgroundColor: ['disabled', 'active'],
     },
   },
   plugins: [],

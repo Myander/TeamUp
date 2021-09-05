@@ -26,7 +26,8 @@ export const DefaultButton = props => (
 export const SmallButton = props => (
   <button
     onClick={props.handleClick}
-    className={`bg-blue-500 hover:bg-blue-700  
+    disabled={!props.disabled}
+    className={`bg-blue-500 hover:bg-blue-700 disabled:opacity-30 disabled:hover:bg-blue-500 disabled:cursor-default 
   text-white font-semibold py-0.5 px-5 ml-4 rounded transition duration-500 ease-out 
   `}
   >

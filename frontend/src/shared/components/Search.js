@@ -24,11 +24,13 @@ const Search = () => {
   };
 
   const SearchItem = ({ image, title }) => (
-    <div className={`flex hover:bg-gray-600 my-0.5 cursor-pointer`}>
+    <div className={`flex hover:bg-gray-500 my-0.5 cursor-pointer`}>
       <div className="flex-shrink-0 mr-1">
         <img className="h-8 w-8 mx-1 object-cover" src={image} alt={title} />
       </div>
-      <div className="text-xl font-medium text-black">{title}</div>
+      <div className="text-xl font-medium text-black dark:text-gray-50">
+        {title}
+      </div>
     </div>
   );
 
@@ -53,11 +55,11 @@ const Search = () => {
         // onBlur={handleBlur}
         placeholder="Search"
         className="block border border-transparent focus:outline-none rounded
-      focus:ring-2 focus:ring-blue-600 focus:border-transparent 
-      shadow-inner bg-gray-100 w-96 p-1 dark:bg-gray-500"
+      focus:ring-2 focus:ring-blue-600 focus:border-transparent text-black dark:text-gray-50 
+      shadow-inner bg-gray-100 w-96 p-1 pl-4 dark:bg-gray-700 dark:placeholder-gray-50"
       ></input>
       <div
-        className={`absolute bg-gray-400 rounded shadow-sm p-1 w-96 my-0.5 z-50 ${
+        className={`absolute bg-gray-50 dark:bg-gray-700 rounded shadow-sm p-1 w-96 my-0.5 z-50 dark:text-gray-50 ${
           clickOutside ? 'invisible' : 'visible'
         }`}
       >
