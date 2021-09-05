@@ -4,10 +4,6 @@ const jwt = require('jsonwebtoken');
 const HttpError = require('../models/http-error');
 const User = require('../models/user');
 
-const testFun = (req, res, next) => {
-  res.json({ hello: 'World' });
-};
-
 /* ------------------------------- SIGNUP ------------------------------- */
 const signup = async (req, res, next) => {
   const errors = validationResult(req);
@@ -18,7 +14,7 @@ const signup = async (req, res, next) => {
     );
   }
 
-  const { email, password, firstName, lastName, userName } = req.body;
+  const { email, password, userName } = req.body;
 
   // Check if user exists
   let existingUser;
@@ -46,8 +42,6 @@ const signup = async (req, res, next) => {
   }
 
   const createdUser = new User({
-    firstName,
-    lastName,
     userName,
     email,
     password: hashedPassword,
@@ -143,6 +137,5 @@ const login = async (req, res, next) => {
   });
 };
 
-exports.testFun = testFun;
 exports.signup = signup;
 exports.login = login;

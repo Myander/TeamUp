@@ -190,8 +190,16 @@ const updateTeam = async (req, res, next) => {
 
   const tid = req.params.tid;
 
-  const { title, description, owner, game, scheduled, private, members } =
-    req.body;
+  const {
+    title,
+    description,
+    owner,
+    game,
+    scheduled,
+    private,
+    members,
+    removedUserId,
+  } = req.body;
 
   let team;
   try {
@@ -203,18 +211,85 @@ const updateTeam = async (req, res, next) => {
     );
   }
 
-  if (team.owner.toString() !== req.userData.userId) {
-    return next(new HttpError('You are unauthorized to edit this place.', 401));
-  }
+  // if (team.owner.toString() !== req.userData.userId) {
+  //   return next(new HttpError('You are unauthorized to edit this place.', 401));
+  // }
+
+  let prevMembers = team.members;
 
   team.title = title;
   team.description = description;
   team.owner = owner;
   team.game = game;
-  //team.scheduled = scheduled;
+  team.scheduled = scheduled ? scheduled : null;
   team.private = private;
   team.members = members;
 
+  // if new member added or removed, must update the user as well.
+  if (
+    prevMembers.length < members.length ||
+    prevMembers.length > members.length
+  ) {
+    let addMember = prevMembers.length < members.length ? true : false;
+    let user;
+
+    // prevent duplicate members
+    if (addMember) {
+      for (let i = 0; i < prevMembers.length; i++) {
+        if (prevMembers[i].toString() === members[members.length - 1]) {
+          return next(
+            new HttpError(
+              'Cannot add the same team member more than once.',
+              500
+            )
+          );
+        }
+      }
+    }
+
+    const userId = addMember ? members[members.length - 1] : removedUserId;
+
+    try {
+      user = await User.findById(userId);
+    } catch (err) {
+      console.log(err);
+      return next(
+        new HttpError('Creating place failed, please try again.', 500)
+      );
+    }
+
+    if (!user) {
+      return next(
+        new HttpError('Could not find user for the provided id.', 404)
+      );
+    }
+
+    try {
+      const sess = await mongoose.startSession();
+      sess.startTransaction();
+      await team.save({ session: sess });
+      if (addMember) {
+        user.teams.push(team);
+      } else {
+        user.teams.pop();
+      }
+      await user.save({ session: sess });
+      await sess.commitTransaction();
+    } catch (err) {
+      console.log(err);
+      return next(new HttpError('Update Team failed, please try again.', 500));
+    }
+  } else {
+    // new user not added.
+    try {
+      await team.save();
+    } catch (err) {
+      console.log(err);
+      return next(
+        new HttpError('Something went wrong, could not update team.', 500)
+      );
+    }
+  }
   try {
     await team.save();
   } catch (err) {

@@ -28,7 +28,12 @@ router.delete('/:tid', teamControllers.deleteTeam);
 
 router.patch(
   '/:tid',
-  [check('title').not().isEmpty()],
+  [
+    check('title').not().isEmpty(),
+    check('description').not().isEmpty(),
+    check('game').not().isEmpty(),
+    check('private').toBoolean(),
+  ],
   teamControllers.updateTeam
 );
 

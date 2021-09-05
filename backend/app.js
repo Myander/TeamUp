@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 const userRoutes = require('./routes/user-routes');
 const teamRoutes = require('./routes/team-routes');
 const gameRoutes = require('./routes/game-routes');
