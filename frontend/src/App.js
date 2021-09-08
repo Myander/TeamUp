@@ -6,13 +6,13 @@ import {
   Switch,
 } from 'react-router-dom';
 import './App.css';
-import Navbar from 'shared/components/Navbar';
 import GameDirectory from 'teams/pages/GameDirectory';
 import TeamPage from 'teams/pages/TeamPage';
 import Login from 'user/pages/Login';
 import SignUp from 'user/pages/SignUp';
 import { AuthContext } from 'shared/context/auth-context';
 import { useAuth } from 'shared/hooks/auth-hook';
+import MainNavigation from 'shared/components/Navigation/MainNavigation';
 
 function App() {
   const { login, logout, userToken, userId } = useAuth();
@@ -70,7 +70,7 @@ function App() {
       }}
     >
       <Router>
-        <Navbar />
+        <MainNavigation />
         {routes}
       </Router>
     </AuthContext.Provider>
