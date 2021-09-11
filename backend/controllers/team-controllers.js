@@ -10,7 +10,7 @@ const getTeamById = async (req, res, next) => {
   console.log('teamId:', teamId);
   let team;
   try {
-    team = await Team.findById(teamId);
+    team = await Team.findById(teamId).populate('members');
   } catch (err) {
     console.log(err);
     return next(
@@ -27,7 +27,7 @@ const getTeamById = async (req, res, next) => {
   res.json({ team: team.toObject({ getters: true }) });
 };
 
-/* ------------------------------- GET TEAM BY USER ID -------------------------- */
+/* ------------------------------- GET TEAMS BY USER ID -------------------------- */
 const getTeamsByUserId = async (req, res, next) => {
   const userId = req.params.uid;
   let userWithTeams;
