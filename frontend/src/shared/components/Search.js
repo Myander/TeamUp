@@ -28,7 +28,7 @@ const Search = () => {
       <div className="flex-shrink-0 mr-1">
         <img className="h-8 w-8 mx-1 object-cover" src={image} alt={title} />
       </div>
-      <div className="text-xl font-medium text-black dark:text-gray-50">
+      <div className="sm:text-sm md:text-xl font-medium text-black dark:text-gray-50 truncate">
         {title}
       </div>
     </div>
@@ -56,10 +56,10 @@ const Search = () => {
         placeholder="Search"
         className="block border border-transparent focus:outline-none rounded
       focus:ring-2 focus:ring-blue-600 focus:border-transparent text-black dark:text-gray-50 
-      shadow-inner bg-gray-100 w-96 p-1 pl-4 dark:bg-gray-700 dark:placeholder-gray-50"
+      shadow-inner bg-gray-100 w-60 md:w-96 p-1 pl-4 dark:bg-gray-700 dark:placeholder-gray-50"
       ></input>
       <div
-        className={`absolute bg-gray-50 dark:bg-gray-700 rounded shadow-sm p-1 w-96 my-0.5 z-50 dark:text-gray-50 ${
+        className={`absolute bg-gray-50 dark:bg-gray-700 rounded shadow-sm p-1 w-60 md:w-72 lg:w-96 my-0.5 z-50 dark:text-gray-50 ${
           clickOutside ? 'invisible' : 'visible'
         }`}
       >

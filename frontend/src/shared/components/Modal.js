@@ -26,7 +26,7 @@ export const Modal = props => {
     <div
       className={`${
         openModal ? 'visible' : 'invisible'
-      } absolute z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2`}
+      } absolute z-50 top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/3`}
     >
       {props.children}
     </div>

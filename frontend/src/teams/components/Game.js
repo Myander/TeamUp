@@ -14,8 +14,8 @@ export const Game = ({ game }) => {
   };
 
   return (
-    <PageLink to={`teams/${slug}`}>
-      <div className="relative mx-2 my-4 w-48 cursor-pointer">
+    <PageLink to={`/teams/${slug}`}>
+      <div className="relative mx-2 my-4 w-56 md:w-48 cursor-pointer">
         <img
           className="h-72 w-max object-cover rounded-sm transition duration-200 
         transform hover:-translate-y-1.5 hover:translate-x-1.5 hover:shadow-md"

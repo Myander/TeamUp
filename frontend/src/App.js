@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -13,6 +13,7 @@ import SignUp from 'user/pages/SignUp';
 import { AuthContext } from 'shared/context/auth-context';
 import { useAuth } from 'shared/hooks/auth-hook';
 import MainNavigation from 'shared/components/Navigation/MainNavigation';
+import TeamDetailPage from 'teams/pages/TeamDetailPage';
 
 function App() {
   const { login, logout, userToken, userId } = useAuth();
@@ -21,9 +22,9 @@ function App() {
 
   // const UserData = JSON.parse(localStorage.getItem('userData'));
   // const isLoggedIn = UserData ? UserData.isLoggedIn : false;
-  useEffect(() => {
-    console.log('userToken', userToken);
-  }, [userToken]);
+  // useEffect(() => {
+  //   console.log('userToken', userToken);
+  // }, [userToken]);
 
   // console.log('isLoggedIn: ', isLoggedIn);
 
@@ -36,6 +37,9 @@ function App() {
         <Route path="/teams/:name">
           <TeamPage />
         </Route>
+        <Route path="/team/:teamId">
+          <TeamDetailPage />
+        </Route>
         <Redirect to="/" />
       </Switch>
     );
@@ -47,6 +51,9 @@ function App() {
         </Route>
         <Route path="/teams/:name">
           <TeamPage />
+        </Route>
+        <Route path="/team/:teamId">
+          <TeamDetailPage />
         </Route>
         <Route path="/signup">
           <SignUp />

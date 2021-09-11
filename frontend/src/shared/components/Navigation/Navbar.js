@@ -1,21 +1,18 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { DefaultButton } from '../Buttons';
 import Dropdown from '../Dropdown';
 import PageLink from '../PageLink';
 import Search from '../Search';
-import { AuthContext } from 'shared/context/auth-context';
 import UserMenu from 'user/components/UserMenu';
 import { Menu } from 'icons/Icons';
 
-const Navbar = props => {
-  const auth = useContext(AuthContext);
-
+const Navbar = ({ auth, handleDrawer }) => {
   return (
     <div
-      className={`flex justify-between items-center py-2 px-8 shadow dark:bg-gray-800`}
+      className={`absolute left-0 top-0 w-full flex justify-between items-center py-2 px-8 shadow dark:bg-gray-800`}
     >
       <div className={`flex items-center`}>
-        <div className="cursor-pointer" onClick={props.handleDrawer}>
+        <div className="cursor-pointer" onClick={handleDrawer}>
           <Menu />
         </div>
         <div className="ml-4 mb-0.5">LOGO</div>

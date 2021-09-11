@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { AuthContext } from 'shared/context/auth-context';
-import { Input } from 'user/components/Inputs';
+import { Input, TextArea } from 'user/components/Inputs';
 import { CloseIcon } from 'icons/Icons';
 
 const NewTeam = ({ game, handleClose, addNewTeam }) => {
@@ -56,11 +56,11 @@ const NewTeam = ({ game, handleClose, addNewTeam }) => {
   };
 
   return (
-    <div className="py-10 mx-auto">
+    <div className="mx-auto ring-2 ring-opacity-50 dark:ring-gray-100 shadow-md rounded">
       <form
         ref={formRef}
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white dark:bg-gray-900 dark:text-gray-50 text-center rounded pb-8 pt-2 px-5 shadow max-w-xs mx-auto"
+        className="bg-white dark:bg-gray-900 dark:text-gray-50 text-center rounded pb-8 pt-2 px-5 w-72 md:w-96 mx-auto"
       >
         <div className="flex justify-end">
           <div
@@ -80,7 +80,7 @@ const NewTeam = ({ game, handleClose, addNewTeam }) => {
           {...register('title', { required: 'Title required.' })}
         />
         {errors.description && <p>{errors.description.message}</p>}
-        <Input
+        <TextArea
           placeholder="Description"
           {...register('description', { required: 'description required.' })}
         />

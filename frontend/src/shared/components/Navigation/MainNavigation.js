@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from 'shared/context/auth-context';
+import UserTeams from 'teams/components/UserTeams';
 import Backdrop from '../Backdrop';
 import Navbar from './Navbar';
 import SideDrawer from './SideDrawer';
 
 const MainNavigation = () => {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+  const auth = useContext(AuthContext);
 
   const openDrawerHandler = () => {
     setDrawerIsOpen(true);
@@ -15,8 +18,14 @@ const MainNavigation = () => {
   };
 
   const content = (
-    <div className="p-6 text-white">
-      <div className="flex items-center"></div>
+    <div className="text-black dark:text-white">
+      <div className="flex items-center">
+        <UserTeams
+          auth={auth}
+          handleCloseDrawer={closeDrawerHandler}
+          open={drawerIsOpen}
+        />
+      </div>
     </div>
   );
 
@@ -29,7 +38,7 @@ const MainNavigation = () => {
         content={content}
       />
 
-      <Navbar handleDrawer={openDrawerHandler} />
+      <Navbar auth={auth} handleDrawer={openDrawerHandler} />
     </>
   );
 };
