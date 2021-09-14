@@ -52,6 +52,10 @@ mongoose.set('useCreateIndex', true);
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    app.listen(5000);
+    const server = app.listen(5000);
+    const io = require('./socket').init(server);
+    io.on('connection', socket => {
+      console.log('client connected', socket.id);
+    });
   })
   .catch(err => console.log(err));

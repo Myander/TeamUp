@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const HttpError = require('../models/http-error');
 const Team = require('../models/team');
 const User = require('../models/user');
+const io = require('../socket');
 
 /* ------------------------------- GET TEAM BY ID ------------------------------- */
 const getTeamById = async (req, res, next) => {
@@ -137,7 +138,7 @@ const createTeam = async (req, res, next) => {
     console.log(err);
     return next(new HttpError('Creating Team failed, please try again.', 500));
   }
-
+  // io.getIO().emit('teams', { action: 'create', team: createdTeam });
   res.status(200).json({ team: createdTeam });
 };
 
