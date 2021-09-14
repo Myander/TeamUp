@@ -5,28 +5,18 @@ import {
   Redirect,
   Switch,
 } from 'react-router-dom';
-import './App.css';
 import GameDirectory from 'teams/pages/GameDirectory';
 import TeamPage from 'teams/pages/TeamPage';
-import Login from 'user/pages/Login';
-import SignUp from 'user/pages/SignUp';
-import { AuthContext } from 'shared/context/auth-context';
+import Login from 'user/pages/Login2';
+import SignUp from 'user/pages/Signup2';
+import { AuthContextProvider } from 'shared/context/AuthContext';
 import { useAuth } from 'shared/hooks/auth-hook';
 import MainNavigation from 'shared/components/Navigation/MainNavigation';
 import TeamDetailPage from 'teams/pages/TeamDetailPage';
 
 function App() {
   const { login, logout, userToken, userId } = useAuth();
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   let routes;
-
-  // const UserData = JSON.parse(localStorage.getItem('userData'));
-  // const isLoggedIn = UserData ? UserData.isLoggedIn : false;
-  // useEffect(() => {
-  //   console.log('userToken', userToken);
-  // }, [userToken]);
-
-  // console.log('isLoggedIn: ', isLoggedIn);
 
   if (!!userToken) {
     routes = (
@@ -67,20 +57,17 @@ function App() {
   }
 
   return (
-    <AuthContext.Provider
-      value={{
-        isLoggedIn: !!userToken,
-        token: userToken,
-        userId,
-        login,
-        logout,
-      }}
+    <AuthContextProvider
+      login={login}
+      logout={logout}
+      token={userToken}
+      userId={userId}
     >
       <Router>
         <MainNavigation />
         {routes}
       </Router>
-    </AuthContext.Provider>
+    </AuthContextProvider>
   );
 }
 

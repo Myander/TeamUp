@@ -1,15 +1,14 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { Input } from 'user/components/Inputs';
-import { AuthContext } from 'shared/context/auth-context';
 import PageContainer from 'shared/components/PageContainer';
 import { Redirect } from 'react-router-dom';
 import Loader from 'shared/components/Loader';
 
 export default function Signup() {
   const [loading, setLoading] = useState(false);
-  const auth = useContext(AuthContext);
+  const [success, setSuccess] = useState(false);
   const {
     register,
     handleSubmit,
@@ -25,9 +24,8 @@ export default function Signup() {
         password: data.password,
       })
       .then(res => {
-        // console.log(res);
+        setSuccess(true);
         setLoading(false);
-        auth.login(res.data.userId, res.data.token);
       })
       .catch(err => {
         console.log(err);
@@ -37,7 +35,7 @@ export default function Signup() {
 
   return (
     <>
-      {auth.isLoggedIn && <Redirect to="/" />}
+      {success && <Redirect to="/login" />}
       <PageContainer>
         <div className="py-10">
           <form

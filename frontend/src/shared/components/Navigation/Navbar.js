@@ -6,10 +6,11 @@ import Search from '../Search';
 import UserMenu from 'user/components/UserMenu';
 import { Menu } from 'icons/Icons';
 
-const Navbar = ({ auth, handleDrawer }) => {
+const Navbar = ({ isLoggedIn, handleDrawer }) => {
+  console.log('isLoggedIn', isLoggedIn);
   return (
     <div
-      className={`absolute left-0 top-0 w-full flex justify-between items-center py-2 px-8 shadow dark:bg-gray-800`}
+      className={`fixed z-40 left-0 top-0 w-full h-12 flex justify-between items-center py-2 px-8 shadow dark:bg-gray-800`}
     >
       <div className={`flex items-center`}>
         <div className="cursor-pointer" onClick={handleDrawer}>
@@ -19,7 +20,7 @@ const Navbar = ({ auth, handleDrawer }) => {
         <Search />
       </div>
       <div className={`flex items-center space-`}>
-        {!auth.isLoggedIn && (
+        {!isLoggedIn && (
           <>
             <PageLink to={`/login`}>
               <DefaultButton>Login</DefaultButton>
@@ -29,7 +30,7 @@ const Navbar = ({ auth, handleDrawer }) => {
             </PageLink>
           </>
         )}
-        {auth.isLoggedIn && (
+        {isLoggedIn && (
           <Dropdown>
             <UserMenu />
           </Dropdown>

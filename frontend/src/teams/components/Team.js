@@ -31,14 +31,16 @@ export const Team = ({ team, isLoggedIn, handleClick }) => {
             {team.members.length}
           </div>
         </div>
-        {
+        {team.private ? (
+          <SmallButton disabled={isLoggedIn}>Apply</SmallButton>
+        ) : (
           <SmallButton
             disabled={isLoggedIn}
             handleClick={handleClick.bind(null, team)}
           >
             Join
           </SmallButton>
-        }
+        )}
       </div>
     </div>
   );
@@ -50,11 +52,11 @@ export const TeamLoading = () => {
       <div className="h-4 w-44 bg-gray-300 dark:bg-gray-500"></div>
       <div className="h-4 my-4 bg-gray-300 dark:bg-gray-500"></div>
       <div className="flex justify-between">
-        <div className="flex flex-col w-6">
-          <div className="h-6 bg-gray-300 dark:bg-gray-500"></div>
-          <div className="h-6 mt-2 bg-gray-300 dark:bg-gray-500"></div>
+        <div className="flex flex-col w-6 justify-end items-center">
+          <div className="h-6 w-5 bg-gray-300 dark:bg-gray-500"></div>
+          <div className="h-4 w-3 mt-2 bg-gray-300 dark:bg-gray-500"></div>
         </div>
-        <div className="h-6 w-8 mt-6 bg-gray-300 dark:bg-gray-500"></div>
+        <div className="h-10 w-16 rounded-sm mt-6 bg-gray-300 dark:bg-gray-500"></div>
       </div>
     </div>
   );

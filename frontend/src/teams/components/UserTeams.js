@@ -32,8 +32,7 @@ const Team = ({ team, handleCloseDrawer }) => {
   );
 };
 
-const UserTeams = ({ auth, handleCloseDrawer }) => {
-  const { userId } = auth;
+const UserTeams = ({ userId, handleCloseDrawer }) => {
   const [teams, setTeams] = useState([]);
 
   useEffect(() => {

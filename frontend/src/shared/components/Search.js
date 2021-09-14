@@ -72,7 +72,7 @@ const Search = () => {
             />
           ))
         ) : (
-          <div>Search for a game!</div>
+          <div className="px-3 text-gray-50">Search for a game!</div>
         )}
       </div>
     </div>

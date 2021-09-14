@@ -6,6 +6,12 @@ module.exports = {
       transitionProperty: {
         width: 'width',
       },
+      minHeight: {
+        'screen-nav': 'calc(100vh - 3rem)',
+      },
+      height: {
+        tall: '36rem',
+      },
     },
   },
   variants: {

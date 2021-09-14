@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Settings, Groups, Logout, Theme } from 'icons/Icons';
 import { Toggle } from 'shared/components/Toggle';
-import { AuthContext } from 'shared/context/auth-context';
+import { AuthContext } from 'shared/context/AuthContext';
 
 const MenuRow = props => (
   <div
@@ -22,7 +22,12 @@ const MenuText = props => (
 );
 
 const UserMenu = () => {
-  const auth = useContext(AuthContext);
+  const { dispatch, logout } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    dispatch({ type: 'LOGOUT' });
+    logout();
+  };
 
   return (
     <div className="w-48 py-4">
@@ -39,7 +44,7 @@ const UserMenu = () => {
         <Groups />
         <MenuText>My Teams</MenuText>
       </MenuRow>
-      <MenuRow handleClick={auth.logout}>
+      <MenuRow handleClick={handleLogout}>
         <Logout />
         <MenuText>Logout</MenuText>
       </MenuRow>

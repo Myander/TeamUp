@@ -5,11 +5,13 @@ let logoutTimer;
 export const useAuth = () => {
   const [userToken, setUserToken] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [username, setUsername] = useState(null);
   const [tokenExpirationDate, setTokenExpirationDate] = useState(null);
 
-  const login = useCallback((uid, token, expirationDate) => {
+  const login = useCallback((uid, token, username, expirationDate) => {
     setUserToken(token);
     setUserId(uid);
+    setUsername(username);
 
     const tokenExpirationDate =
       expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
@@ -20,6 +22,7 @@ export const useAuth = () => {
       JSON.stringify({
         userId: uid,
         token: token,
+        username: username,
         expiration: tokenExpirationDate.toISOString(),
         isLoggedIn: !!token,
       })
@@ -58,5 +61,5 @@ export const useAuth = () => {
     }
   }, [login]);
 
-  return { login, logout, userToken, userId };
+  return { login, logout, userToken, userId, username };
 };

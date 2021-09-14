@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router';
 import { useEffect } from 'react/cjs/react.development';
 import PageContainer from 'shared/components/PageContainer';
+import Messenger from 'teams/components/Chat/Messenger';
 
 const TeamDetails = ({ team }) => {
   return (
@@ -26,7 +27,9 @@ const TeamDetails = ({ team }) => {
         </div>
         <div className="shadow dark:bg-gray-800 rounded mt-4 px-2 py-4">
           {team.members.map(user => (
-            <div className="mb-2">{user.userName}</div>
+            <div className="mb-2" key={user._id}>
+              {user.userName}
+            </div>
           ))}
         </div>
       </div>
@@ -44,7 +47,6 @@ const TeamDetailPage = () => {
     axios
       .get(`http://localhost:5000/api/teams/${teamId}`)
       .then(res => {
-        console.log('team details', res.data.team);
         setTeam(res.data.team);
       })
       .catch(err => {
@@ -57,8 +59,8 @@ const TeamDetailPage = () => {
       {team ? (
         <div className="text-black dark:text-white p-12 lg:flex lg:flex-wrap lg:justify-around">
           <TeamDetails team={team} />
-          <div className="lg:flex-grow dark:bg-gray-800 shadow mt-6 max-w-3xl p-4">
-            CHAT
+          <div className="lg:flex-grow dark:bg-gray-800 shadow mt-6 max-w-4xl p-4 rounded">
+            <Messenger />
           </div>
         </div>
       ) : (

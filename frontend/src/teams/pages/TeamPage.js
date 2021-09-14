@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
+// import io from 'socket.io-client';
 import { Button } from 'shared/components/Buttons';
 import { Modal } from 'shared/components/Modal';
 import PageContainer from 'shared/components/PageContainer';
@@ -8,10 +9,10 @@ import { Teams, TeamsLoading } from 'teams/components/Teams';
 import axios from 'axios';
 import Loader from 'shared/components/Loader';
 import useInfiniteScroll from 'shared/hooks/infiniteScroll-hook';
-import { AuthContext } from 'shared/context/auth-context';
+import { AuthContext } from 'shared/context/AuthContext';
 
 const TeamPage = () => {
-  const auth = useContext(AuthContext);
+  const { userId, token } = useContext(AuthContext);
   const [openModal, setOpenModal] = useState(false);
   const [teams, setTeams] = useState([]);
   const [page, setPage] = useState(1);
@@ -21,6 +22,7 @@ const TeamPage = () => {
   let game = name.split('-').join(' ');
 
   const addNewTeam = team => {
+    console.log('ADDING NEW TEAM');
     setTeams(currTeams => {
       const updatedTeams = [...currTeams];
       updatedTeams.push(team);
@@ -49,9 +51,13 @@ const TeamPage = () => {
     axios
       .get(`http://localhost:5000/api/teams/game/${name}`)
       .then(res => {
-        // console.log('result: ', res);
         setTeams(res.data.teams);
         setTotalTeams(res.data.count);
+        // const socket = io.connect('http://localhost:5000');
+        // socket.on('teams', data => {
+        //   console.log('data from socket:', data);
+        //   addNewTeam(data.team);
+        // });
       })
       .catch(err => {
         console.log(err);
@@ -65,25 +71,27 @@ const TeamPage = () => {
   return (
     <PageContainer>
       <div className="flex items-center p-4">
-        {auth.isLoggedIn && <Button handleClick={handleClick}>New Team</Button>}
+        {!!token && <Button handleClick={handleClick}>New Team</Button>}
       </div>
       <Modal openModal={openModal}>
         <NewTeam
           game={game}
           handleClose={setOpenModal}
           addNewTeam={addNewTeam}
+          token={token}
         />
       </Modal>
       {teams.length ? (
         <Teams
           teams={teams}
-          isLoggedIn={auth.isLoggedIn}
-          token={auth.token}
-          userId={auth.userId}
+          isLoggedIn={!!token}
+          token={token}
+          userId={userId}
         />
       ) : (
         <TeamsLoading />
       )}
+
       <div ref={targetRef}>
         {teamsArraylength < totalTeams && (
           <Loader height={8} width={10} mb={4} />
