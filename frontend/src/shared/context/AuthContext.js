@@ -9,6 +9,8 @@ const INITIAL_STATE = {
   logout: null,
   token: null,
   userId: null,
+  username: null,
+  socket: null,
 };
 
 export const AuthContext = createContext(INITIAL_STATE);
@@ -19,6 +21,8 @@ export const AuthContextProvider = ({
   logout,
   token,
   userId,
+  username,
+  socket,
 }) => {
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
 
@@ -33,6 +37,8 @@ export const AuthContextProvider = ({
         logout,
         token,
         userId,
+        username,
+        socket,
       }}
     >
       {children}

@@ -8,7 +8,7 @@ import SideDrawer from './SideDrawer';
 const MainNavigation = () => {
   const { userId } = useContext(AuthContext);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
-
+  // console.log('userId', userId);
   const openDrawerHandler = () => {
     setDrawerIsOpen(true);
   };

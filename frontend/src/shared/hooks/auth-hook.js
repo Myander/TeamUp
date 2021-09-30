@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import io from 'socket.io-client';
 
 let logoutTimer;
 
@@ -7,11 +8,15 @@ export const useAuth = () => {
   const [userId, setUserId] = useState(null);
   const [username, setUsername] = useState(null);
   const [tokenExpirationDate, setTokenExpirationDate] = useState(null);
+  const [socket, setSocket] = useState(null);
 
   const login = useCallback((uid, token, username, expirationDate) => {
     setUserToken(token);
     setUserId(uid);
     setUsername(username);
+
+    const soc = io.connect('http://localhost:5000');
+    setSocket(soc);
 
     const tokenExpirationDate =
       expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
@@ -33,6 +38,7 @@ export const useAuth = () => {
     setUserToken(null);
     setUserId(null);
     setTokenExpirationDate(null);
+    setUsername(null);
     localStorage.removeItem('userData');
   }, []);
 
@@ -56,10 +62,11 @@ export const useAuth = () => {
       login(
         storedData.userId,
         storedData.token,
+        storedData.username,
         new Date(storedData.expiration)
       );
     }
   }, [login]);
 
-  return { login, logout, userToken, userId, username };
+  return { login, logout, userToken, userId, username, socket };
 };

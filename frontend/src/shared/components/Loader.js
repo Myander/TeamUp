@@ -1,9 +1,11 @@
 import React from 'react';
 
-const Loader = ({ height, width, mb, fill }) => {
+const Loader = ({ height, width, mb, fill, mt }) => {
   return (
     <svg
-      className={`fill-current text-blue animate-spin h-${height} w-${width} mx-auto mb-${mb}`}
+      className={`fill-current text-blue animate-spin h-${height} w-${width} mx-auto mb-${
+        mb ? mb : 0
+      } mt-${mt ? mt : 0}`}
       viewBox="0 0 24 24"
     >
       <path

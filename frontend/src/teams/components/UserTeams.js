@@ -41,7 +41,6 @@ const UserTeams = ({ userId, handleCloseDrawer }) => {
     axios
       .get(`http://localhost:5000/api/teams/user/${userId}`)
       .then(res => {
-        console.log('res', res.data.user.teams);
         setTeams(res.data.user.teams);
       })
       .catch(err => {

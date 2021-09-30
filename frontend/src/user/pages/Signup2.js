@@ -26,7 +26,7 @@ export default function Signup() {
       setMismatch(false);
       axios
         .post('http://localhost:5000/api/users/signup', {
-          userName: username.current.value,
+          username: username.current.value,
           email: email.current.value,
           password: password.current.value,
         })

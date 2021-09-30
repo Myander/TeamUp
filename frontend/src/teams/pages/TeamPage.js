@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
-// import io from 'socket.io-client';
 import { Button } from 'shared/components/Buttons';
 import { Modal } from 'shared/components/Modal';
 import PageContainer from 'shared/components/PageContainer';
@@ -53,11 +52,6 @@ const TeamPage = () => {
       .then(res => {
         setTeams(res.data.teams);
         setTotalTeams(res.data.count);
-        // const socket = io.connect('http://localhost:5000');
-        // socket.on('teams', data => {
-        //   console.log('data from socket:', data);
-        //   addNewTeam(data.team);
-        // });
       })
       .catch(err => {
         console.log(err);

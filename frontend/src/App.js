@@ -15,7 +15,7 @@ import MainNavigation from 'shared/components/Navigation/MainNavigation';
 import TeamDetailPage from 'teams/pages/TeamDetailPage';
 
 function App() {
-  const { login, logout, userToken, userId } = useAuth();
+  const { login, logout, userToken, userId, username, socket } = useAuth();
   let routes;
 
   if (!!userToken) {
@@ -62,6 +62,8 @@ function App() {
       logout={logout}
       token={userToken}
       userId={userId}
+      username={username}
+      socket={socket}
     >
       <Router>
         <MainNavigation />
