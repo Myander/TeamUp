@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/user-routes');
 const teamRoutes = require('./routes/team-routes');
 const gameRoutes = require('./routes/game-routes');
+const messageRoutes = require('./routes/message-routes');
 const HttpError = require('./models/http-error');
 
 const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.m8jyq.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 app.use('/api/users', userRoutes);
 app.use('/api/teams', teamRoutes);
 app.use('/api/games', gameRoutes);
+app.use('/api/messages', messageRoutes);
 
 app.use((req, res, next) => {
   throw new HttpError('Could not find this route.', 404);
@@ -53,9 +55,53 @@ mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     const server = app.listen(5000);
-    const io = require('./socket').init(server);
+    const io = require('./socket').init(server, {
+      origin: 'http://localhost:3000',
+    });
+
     io.on('connection', socket => {
       console.log('client connected', socket.id);
+
+      socket.on('joinTeamChat', ({ teamId, userId, username }) => {
+        socket.username = username;
+        socket.userId = userId;
+        socket.join(teamId);
+
+        io.in(teamId)
+          .fetchSockets()
+          .then(sockets => {
+            const chatMembers = [];
+            sockets.forEach(socket => {
+              chatMembers.push({
+                username: socket.username,
+                userId: socket.userId,
+              });
+            });
+            io.to(teamId).emit('joinedChat', { chatMembers });
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      });
+
+      socket.on('leaveRoom', ({ room }) => {
+        socket.leave(room);
+        io.in(room)
+          .fetchSockets()
+          .then(sockets => {
+            const chatMembers = [];
+            sockets.forEach(socket => {
+              chatMembers.push({
+                username: socket.username,
+                userId: socket.userId,
+              });
+            });
+            io.to(room).emit('updatedChatUsers', { chatMembers });
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      });
     });
   })
   .catch(err => console.log(err));

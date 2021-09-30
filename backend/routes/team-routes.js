@@ -1,15 +1,15 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const teamControllers = require('../controllers/team-controllers');
+const teamController = require('../controllers/team-controller');
 const checkAuth = require('../middleware/check-auth');
 
 const router = Router();
 
-router.get('/:tid', teamControllers.getTeamById);
+router.get('/:tid', teamController.getTeamById);
 
-router.get('/user/:uid', teamControllers.getTeamsByUserId);
+router.get('/user/:uid', teamController.getTeamsByUserId);
 
-router.get('/game/:game', teamControllers.getTeamsByGameName);
+router.get('/game/:game', teamController.getTeamsByGameName);
 
 router.use(checkAuth);
 
@@ -21,10 +21,10 @@ router.post(
     check('game').not().isEmpty(),
     check('private').toBoolean(),
   ],
-  teamControllers.createTeam
+  teamController.createTeam
 );
 
-router.delete('/:tid', teamControllers.deleteTeam);
+router.delete('/:tid', teamController.deleteTeam);
 
 router.patch(
   '/:tid',
@@ -34,7 +34,7 @@ router.patch(
     check('game').not().isEmpty(),
     check('private').toBoolean(),
   ],
-  teamControllers.updateTeam
+  teamController.updateTeam
 );
 
 module.exports = router;

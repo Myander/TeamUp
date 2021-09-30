@@ -1,14 +1,13 @@
 const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const HttpError = require('../models/http-error');
-const Team = require('../models/team');
-const User = require('../models/user');
-const io = require('../socket');
+const Team = require('../models/Team');
+const User = require('../models/User');
 
 /* ------------------------------- GET TEAM BY ID ------------------------------- */
 const getTeamById = async (req, res, next) => {
   const teamId = req.params.tid;
-  console.log('teamId:', teamId);
+  // console.log('teamId:', teamId);
   let team;
   try {
     team = await Team.findById(teamId).populate('members');
@@ -138,7 +137,6 @@ const createTeam = async (req, res, next) => {
     console.log(err);
     return next(new HttpError('Creating Team failed, please try again.', 500));
   }
-  // io.getIO().emit('teams', { action: 'create', team: createdTeam });
   res.status(200).json({ team: createdTeam });
 };
 

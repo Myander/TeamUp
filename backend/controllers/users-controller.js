@@ -2,7 +2,7 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const HttpError = require('../models/http-error');
-const User = require('../models/user');
+const User = require('../models/User');
 
 /* ------------------------------- SIGNUP ------------------------------- */
 const signup = async (req, res, next) => {
@@ -14,7 +14,7 @@ const signup = async (req, res, next) => {
     );
   }
 
-  const { email, password, userName } = req.body;
+  const { email, password, username } = req.body;
 
   // Check if user exists
   let existingUser;
@@ -42,7 +42,7 @@ const signup = async (req, res, next) => {
   }
 
   const createdUser = new User({
-    userName,
+    username,
     email,
     password: hashedPassword,
     friends: [],
@@ -136,7 +136,7 @@ const login = async (req, res, next) => {
   res.json({
     userId: existingUser.id,
     email: existingUser.email,
-    username: existingUser.userName,
+    username: existingUser.username,
     token,
   });
 };
