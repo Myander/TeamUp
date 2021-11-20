@@ -60,48 +60,58 @@ mongoose
     });
 
     io.on('connection', socket => {
-      console.log('client connected', socket.id);
+      // console.log('client connected', socket.id);
 
+      // update chat users when someone joins.
       socket.on('joinTeamChat', ({ teamId, userId, username }) => {
         socket.username = username;
         socket.userId = userId;
         socket.join(teamId);
 
-        io.in(teamId)
-          .fetchSockets()
-          .then(sockets => {
-            const chatMembers = [];
-            sockets.forEach(socket => {
-              chatMembers.push({
-                username: socket.username,
-                userId: socket.userId,
-              });
-            });
-            io.to(teamId).emit('joinedChat', { chatMembers });
-          })
-          .catch(err => {
-            console.log(err);
-          });
+        updateChatMembers(io, teamId);
       });
 
+      // update chat users when somone leaves.
       socket.on('leaveRoom', ({ room }) => {
         socket.leave(room);
-        io.in(room)
-          .fetchSockets()
-          .then(sockets => {
-            const chatMembers = [];
-            sockets.forEach(socket => {
-              chatMembers.push({
-                username: socket.username,
-                userId: socket.userId,
-              });
-            });
-            io.to(room).emit('updatedChatUsers', { chatMembers });
-          })
-          .catch(err => {
-            console.log(err);
-          });
+        updateChatMembers(io, room);
+      });
+
+      socket.on('disconnecting', () => {
+        console.log('socket disconnecting!!', socket.rooms, socket.id);
+        socket.rooms.forEach(room => {
+          if (socket.id !== room) {
+            console.log('item:', room);
+            updateChatMembers(io, room, socket.id);
+          }
+        });
       });
     });
   })
+
   .catch(err => console.log(err));
+
+// take io instance, roomId, and optional socketId to remove from the list (useful for socket disconnecting)
+async function updateChatMembers(io, room, socketIdToRemove) {
+  try {
+    const sockets = await io.in(room).fetchSockets();
+    const chatMembers = [];
+    const chatIdSet = new Set();
+    sockets.forEach(socket => {
+      if (socketIdToRemove && socketIdToRemove === socket.id) {
+        // just do nothing.
+      } else {
+        if (!chatIdSet.has(socket.userId)) {
+          chatMembers.push({
+            username: socket.username,
+            userId: socket.userId,
+          });
+          chatIdSet.add(socket.userId);
+        }
+      }
+    });
+    io.to(room).emit('updatedChatUsers', { chatMembers: chatMembers });
+  } catch (err) {
+    console.log(err);
+  }
+}

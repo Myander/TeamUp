@@ -60,7 +60,8 @@ const getTeamsByGameName = async (req, res, next) => {
   gameName = gameName.split('-').join(' ');
 
   try {
-    count = await Team.find().estimatedDocumentCount();
+    // possibly make this into separate request to reduce api calls.
+    count = await Team.countDocuments({ game: gameName });
   } catch (err) {
     console.log(err);
   }
