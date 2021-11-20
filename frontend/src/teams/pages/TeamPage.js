@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  useRef,
+} from 'react';
 import { Button } from 'shared/components/Buttons';
 import { Modal } from 'shared/components/Modal';
 import PageContainer from 'shared/components/PageContainer';
@@ -16,12 +22,13 @@ const TeamPage = () => {
   const [teams, setTeams] = useState([]);
   const [page, setPage] = useState(1);
   const [totalTeams, setTotalTeams] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { name } = useParams();
   const teamsArraylength = teams.length;
   let game = name.split('-').join(' ');
 
   const addNewTeam = team => {
-    console.log('ADDING NEW TEAM');
+    //console.log('ADDING NEW TEAM');
     setTeams(currTeams => {
       const updatedTeams = [...currTeams];
       updatedTeams.push(team);
@@ -47,14 +54,18 @@ const TeamPage = () => {
   const { targetRef } = useInfiniteScroll(getMoreTeams);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`http://localhost:5000/api/teams/game/${name}`)
       .then(res => {
+        console.log('game data', res.data);
         setTeams(res.data.teams);
         setTotalTeams(res.data.count);
+        setLoading(false);
       })
       .catch(err => {
         console.log(err);
+        setLoading(false);
       });
   }, [name]);
 
@@ -64,17 +75,21 @@ const TeamPage = () => {
 
   return (
     <PageContainer>
-      <div className="flex items-center p-4">
-        {!!token && <Button handleClick={handleClick}>New Team</Button>}
+      <div className="flex items-center p-4 mt-6">
+        {!!token && !loading && (
+          <Button handleClick={handleClick}>New Team</Button>
+        )}
       </div>
-      <Modal openModal={openModal}>
-        <NewTeam
-          game={game}
-          handleClose={setOpenModal}
-          addNewTeam={addNewTeam}
-          token={token}
-        />
-      </Modal>
+      {
+        <Modal openModal={openModal}>
+          <NewTeam
+            game={game}
+            handleClose={setOpenModal}
+            addNewTeam={addNewTeam}
+            token={token}
+          />
+        </Modal>
+      }
       {teams.length ? (
         <Teams
           teams={teams}
@@ -82,12 +97,16 @@ const TeamPage = () => {
           token={token}
           userId={userId}
         />
-      ) : (
+      ) : loading ? (
         <TeamsLoading />
+      ) : (
+        <div className="text-black dark:text-white text-center mt-8 text-lg">
+          No Teams. Trying making a new team!!
+        </div>
       )}
 
       <div ref={targetRef}>
-        {teamsArraylength < totalTeams && (
+        {teamsArraylength && teamsArraylength < totalTeams && (
           <Loader height={8} width={10} mb={4} />
         )}
       </div>

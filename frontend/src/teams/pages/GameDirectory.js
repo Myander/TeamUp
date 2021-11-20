@@ -63,9 +63,6 @@ const GameDirectory = () => {
           : new Array(25)
               .fill(0)
               .map((item, index) => <GameLoading key={index} />)}
-        {/* {new Array(25).fill(0).map((item, index) => (
-          <GameLoading key={index} />
-        ))} */}
       </div>
       <div ref={targetRef}>
         <Loader height={8} width={10} mb={0} />

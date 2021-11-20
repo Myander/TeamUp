@@ -66,11 +66,8 @@ const TeamDetailPage = () => {
         if (member && member._id === userId) {
           if (socket) {
             socket.emit('joinTeamChat', { teamId, userId, username });
-            socket.on('joinedChat', data => {
-              // console.log('user joined chat:', data.chatMembers);
-              setChatMembers(data.chatMembers);
-            });
             socket.on('updatedChatUsers', data => {
+              // console.log('updating chat users');
               setChatMembers(data.chatMembers);
             });
           }

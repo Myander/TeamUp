@@ -10,6 +10,8 @@ const Messenger = ({ teamId, socket, username, userId, chatMembers }) => {
   const textRef = useRef();
   const scrollRef = useRef();
 
+  console.log('chat members:', chatMembers);
+
   useEffect(() => {
     if (!teamId) return;
 
@@ -31,7 +33,7 @@ const Messenger = ({ teamId, socket, username, userId, chatMembers }) => {
   useEffect(() => {
     if (socket) {
       socket.on('newMessage', message => {
-        console.log('new message', message._id);
+        // console.log('new message', message._id);
         setMessages(prevMessages => {
           const appendedMessages = [...prevMessages];
           appendedMessages.push({ ...message });
