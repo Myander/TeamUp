@@ -19,7 +19,6 @@ const useInfiniteScroll = cb => {
   );
 
   useEffect(() => {
-    console.log('useEffect fired!');
     let options = {
       root: null,
       rootMargin: '0px',

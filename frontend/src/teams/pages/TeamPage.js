@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useContext,
-  useRef,
-} from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { Button } from 'shared/components/Buttons';
 import { Modal } from 'shared/components/Modal';
 import PageContainer from 'shared/components/PageContainer';
@@ -58,7 +52,6 @@ const TeamPage = () => {
     axios
       .get(`http://localhost:5000/api/teams/game/${name}`)
       .then(res => {
-        console.log('game data', res.data);
         setTeams(res.data.teams);
         setTotalTeams(res.data.count);
         setLoading(false);
@@ -81,7 +74,7 @@ const TeamPage = () => {
         )}
       </div>
       {
-        <Modal openModal={openModal}>
+        <Modal openModal={openModal} handleClose={setOpenModal}>
           <NewTeam
             game={game}
             handleClose={setOpenModal}

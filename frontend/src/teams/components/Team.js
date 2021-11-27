@@ -1,15 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PersonOutline } from 'icons/Icons';
 import { SmallButton } from 'shared/components/Buttons';
 import useDelayedHoverEffect from 'shared/hooks/delayedHoverEffect-hook';
 import Tooltip from 'shared/components/Tooltip';
 
-export const Team = ({ team, isLoggedIn, handleClick }) => {
+export const Team = ({
+  team,
+  isLoggedIn,
+  handleJoinTeam,
+  handleApplyToTeam,
+  userId,
+}) => {
+  const [member, setMember] = useState(false);
   const { active, handleMouseEnter, handleMouseLeave } =
     useDelayedHoverEffect();
 
+  const handleAddMember = () => {
+    setMember(true);
+  };
+
+  // detect if user is already a team member.
+  useEffect(() => {
+    for (let i = 0; i < team.members.length; i++) {
+      if (userId === team.members[i]) {
+        setMember(true);
+        return;
+      }
+    }
+  }, [team, userId]);
+
   return (
-    <div className="relative mx-2 my-4 w-64 cursor-pointer shadow dark:bg-gray-800 rounded px-5 py-7">
+    <div
+      className={`relative mx-2 my-4 w-64 cursor-pointer shadow dark:bg-gray-800 
+    rounded px-5 py-7 ${member ? 'ring-2 ring-opacity-50 ring-green-300' : ''}`}
+    >
       <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <div className="truncate font-semibold text-2xl dark:text-white mb-2">
           {team.title}
@@ -32,11 +56,21 @@ export const Team = ({ team, isLoggedIn, handleClick }) => {
           </div>
         </div>
         {team.private ? (
-          <SmallButton disabled={isLoggedIn}>Apply</SmallButton>
+          <SmallButton
+            handleClick={handleApplyToTeam.bind(null, team)}
+            disabled={!isLoggedIn || member}
+          >
+            Apply
+          </SmallButton>
         ) : (
           <SmallButton
-            disabled={isLoggedIn}
-            handleClick={handleClick.bind(null, team)}
+            disabled={!isLoggedIn || member}
+            handleClick={handleJoinTeam.bind(
+              null,
+              team,
+              member,
+              handleAddMember
+            )}
           >
             Join
           </SmallButton>

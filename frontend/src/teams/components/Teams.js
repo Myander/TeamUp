@@ -4,13 +4,11 @@ import axios from 'axios';
 
 export const Teams = ({ teams, isLoggedIn, token, userId }) => {
   const handleJoinTeam = useCallback(
-    team => {
+    (team, member, handleAddMember) => {
       // do not allow members to join more than once
-      for (let i = 0; i < team.members.length; i++) {
-        if (userId === team.members[i]) {
-          console.log('User Already in team!'); // maybe display popup
-          return;
-        }
+      if (member) {
+        console.log('already in the team!');
+        return;
       }
 
       const updatedMembers = [...team.members];
@@ -29,7 +27,8 @@ export const Teams = ({ teams, isLoggedIn, token, userId }) => {
           }
         )
         .then(res => {
-          console.log('res', res);
+          console.log('res', res); // update UI to show membership in the team.
+          handleAddMember(); // need to update member count as well (refactor this)
         })
         .catch(err => {
           console.log(err);
@@ -38,6 +37,10 @@ export const Teams = ({ teams, isLoggedIn, token, userId }) => {
     [token, userId]
   );
 
+  const handleApplyToTeam = team => {
+    console.log('team', team);
+  };
+
   return (
     <div className="flex flex-wrap justify-center max-w-6xl mx-auto py-4">
       {teams.map(team => (
@@ -45,7 +48,9 @@ export const Teams = ({ teams, isLoggedIn, token, userId }) => {
           team={team}
           key={team._id}
           isLoggedIn={isLoggedIn}
-          handleClick={handleJoinTeam}
+          handleJoinTeam={handleJoinTeam}
+          handleApplyToTeam={handleApplyToTeam}
+          userId={userId}
         />
       ))}
     </div>

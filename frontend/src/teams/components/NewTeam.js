@@ -48,7 +48,6 @@ const NewTeam = ({ game, handleClose, addNewTeam, token }) => {
   return (
     <div className="mx-auto ring-2 ring-opacity-50 dark:ring-gray-100 shadow-md rounded">
       <form
-        // ref={formRef}
         onSubmit={onSubmit}
         className="bg-white dark:bg-gray-900 dark:text-gray-50 text-center rounded pb-8 pt-2 px-5 w-72 md:w-96 mx-auto"
       >
@@ -57,28 +56,16 @@ const NewTeam = ({ game, handleClose, addNewTeam, token }) => {
             className="cursor-pointer"
             onClick={handleClose.bind(null, false)}
           >
-            <CloseIcon
-              className="cursor-pointer"
-              onClick={handleClose.bind(null, false)}
-            />
+            <CloseIcon className="cursor-pointer" />
           </div>
         </div>
         <div className="mb-4 w-full py-2 px-4">{game}</div>
-        {/* {errors.title && <p>{errors.title.message}</p>}
-        <Input
-          placeholder="Title"
-          {...register('title', { required: 'Title required.' })}
-        /> */}
+
         <Input2 ref={title} placeholder="Title" required />
-        {/* {errors.description && <p>{errors.description.message}</p>}
-        <TextArea
-          placeholder="Description"
-          {...register('description', { required: 'description required.' })}
-        /> */}
+
         <TextArea2 ref={description} placeholder="Description" required />
-        {/* {errors.status && <p>{errors.title.status}</p>} */}
+
         <select
-          // {...register('status')}
           ref={status}
           className="border-gray-300 dark:bg-gray-500 dark:text-gray-50 mb-4 w-full border-solid border rounded py-2 px-3 text-gray-400"
         >

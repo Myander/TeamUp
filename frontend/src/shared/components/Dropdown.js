@@ -1,9 +1,11 @@
 import { AccountCircle } from 'icons/Icons';
 import React from 'react';
 import useClickOutside from 'shared/hooks/clickOutside-hook';
+import useEscKeyPress from 'shared/hooks/escKeyPress-hook';
 
 const Dropdown = props => {
   const { containerRef, clickOutside, toggleClickInside } = useClickOutside();
+  useEscKeyPress(toggleClickInside, !clickOutside);
 
   return (
     <div className="relative inline-block cursor-pointer" ref={containerRef}>

@@ -10,7 +10,7 @@ const Messenger = ({ teamId, socket, username, userId, chatMembers }) => {
   const textRef = useRef();
   const scrollRef = useRef();
 
-  console.log('chat members:', chatMembers);
+  //console.log('chat members:', chatMembers);
 
   useEffect(() => {
     if (!teamId) return;
