@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const applicationSchema = require('../models/Application');
 const Schema = mongoose.Schema;
 
 const teamSchema = new Schema(
@@ -11,6 +11,7 @@ const teamSchema = new Schema(
     game: { type: String, required: true },
     scheduled: { type: Date, required: false },
     private: { type: Boolean, required: true },
+    applications: [applicationSchema],
   },
   { timestamps: true }
 );

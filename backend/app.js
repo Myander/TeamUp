@@ -73,15 +73,16 @@ mongoose
 
       // update chat users when somone leaves.
       socket.on('leaveRoom', ({ room }) => {
+        //console.log('leaving room', socket.id);
         socket.leave(room);
         updateChatMembers(io, room);
       });
 
       socket.on('disconnecting', () => {
-        console.log('socket disconnecting!!', socket.rooms, socket.id);
+        //console.log('socket disconnecting!!', socket.rooms, socket.id);
         socket.rooms.forEach(room => {
           if (socket.id !== room) {
-            console.log('item:', room);
+            //console.log('item:', room);
             updateChatMembers(io, room, socket.id);
           }
         });
@@ -99,7 +100,7 @@ async function updateChatMembers(io, room, socketIdToRemove) {
     const chatIdSet = new Set();
     sockets.forEach(socket => {
       if (socketIdToRemove && socketIdToRemove === socket.id) {
-        // just do nothing.
+        // dont add this id to list.
       } else {
         if (!chatIdSet.has(socket.userId)) {
           chatMembers.push({

@@ -51,7 +51,6 @@ const getTeamsByUserId = async (req, res, next) => {
 };
 
 /* ------------------------------- GET TEAMS BY GAME ----------------------------- */
-
 const getTeamsByGameName = async (req, res, next) => {
   let gameName = req.params.game;
   let limit = 20;
@@ -112,6 +111,7 @@ const createTeam = async (req, res, next) => {
     private,
     members: [req.userData.userId],
     owner: req.userData.userId,
+    applications: [],
   });
 
   let user;
@@ -188,6 +188,18 @@ const updateTeam = async (req, res, next) => {
     );
   }
 
+  /*  
+  
+  {
+    "userId": "619eaaf93ec30d05fd041e01",
+    "teamId": "619ea9fa3ec30d05fd041dff",
+    "text": "PLZ WORK FFS!",
+    "status": "pending",
+  }
+  
+  
+  */
+
   const tid = req.params.tid;
 
   const {
@@ -199,6 +211,8 @@ const updateTeam = async (req, res, next) => {
     private,
     members,
     removedUserId,
+    applications,
+    removeApplicationId,
   } = req.body;
 
   let team;
@@ -211,10 +225,6 @@ const updateTeam = async (req, res, next) => {
     );
   }
 
-  // if (team.owner.toString() !== req.userData.userId) {
-  //   return next(new HttpError('You are unauthorized to edit this place.', 401));
-  // }
-
   let prevMembers = team.members;
 
   team.title = title;
@@ -226,10 +236,7 @@ const updateTeam = async (req, res, next) => {
   team.members = members;
 
   // if new member added or removed, must update the user as well.
-  if (
-    prevMembers.length < members.length ||
-    prevMembers.length > members.length
-  ) {
+  if (prevMembers.length !== members.length) {
     let addMember = prevMembers.length < members.length ? true : false;
     let user;
 
@@ -249,13 +256,13 @@ const updateTeam = async (req, res, next) => {
 
     const userId = addMember ? members[members.length - 1] : removedUserId;
 
+    console.log('userId', userId);
+
     try {
       user = await User.findById(userId);
     } catch (err) {
       console.log(err);
-      return next(
-        new HttpError('Creating place failed, please try again.', 500)
-      );
+      return next(new HttpError('Error finding user', 500));
     }
 
     if (!user) {
@@ -271,7 +278,7 @@ const updateTeam = async (req, res, next) => {
       if (addMember) {
         user.teams.push(team);
       } else {
-        user.teams.pop();
+        user.teams.pull(team._id); // possibly incorrect and could remove the wrong team
       }
       await user.save({ session: sess });
       await sess.commitTransaction();
@@ -279,8 +286,103 @@ const updateTeam = async (req, res, next) => {
       console.log(err);
       return next(new HttpError('Update Team failed, please try again.', 500));
     }
+
+    // check if need to add or remove an application
+  } else if (team.applications.length !== applications.length) {
+    if (team.applications.length < applications.length) {
+      const application = applications[applications.length - 1];
+      team.applications.push(application);
+      // also add application to the user.
+      let user;
+      try {
+        user = await User.findById(application.userId);
+      } catch (err) {
+        console.log(err);
+        return next(new HttpError('Error finding user', 500));
+      }
+
+      if (!user) {
+        return next(
+          new HttpError('Could not find user for the provided id.', 404)
+        );
+      }
+      user.applications.push(application);
+
+      // send a notification to the team owner.
+
+      // save team and user updates to database
+      try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await team.save({ session: sess });
+        await user.save({ session: sess });
+        await sess.commitTransaction();
+      } catch (err) {
+        console.log(err);
+        return next(
+          new HttpError('Update Team failed, please try again.', 500)
+        );
+      }
+    } else {
+      // find and remove application.
+      team.applications.id(removeApplicationId).remove();
+      try {
+        await team.save();
+      } catch (err) {
+        console.log(err);
+        return next(
+          new HttpError('Something went wrong, could not update team.', 500)
+        );
+      }
+    }
   } else {
-    // new user not added.
+    // new member or application not added or removed.
+
+    // check if any applications have status changed (update users accordingly)
+    let app;
+
+    applications.forEach(application => {
+      if (application.status !== 'pending') app = application;
+    });
+    let user;
+
+    if (app) {
+      try {
+        user = await User.findById(app.userId);
+      } catch (err) {
+        console.log(err);
+        return next(new HttpError('Error finding user', 500));
+      }
+
+      if (!user) {
+        return next(
+          new HttpError('Could not find user for the provided id.', 404)
+        );
+      }
+
+      // update users copy of the application and add to team if approved.
+      user.applications.forEach(ap => {
+        if (ap.teamId.toString() === app.teamId.toString()) {
+          ap.status = app.status;
+          if (app.status === 'approved') {
+            team.members.push(user._id);
+            user.teams.push(team._id);
+          }
+        }
+      });
+      const id = mongoose.Types.ObjectId(app.id);
+      team.applications.id(id).remove();
+
+      try {
+        await user.save();
+      } catch (err) {
+        console.log(err);
+        return next(
+          new HttpError('Something went wrong, could not update user.', 500)
+        );
+      }
+    }
+
     try {
       await team.save();
     } catch (err) {
@@ -289,14 +391,6 @@ const updateTeam = async (req, res, next) => {
         new HttpError('Something went wrong, could not update team.', 500)
       );
     }
-  }
-  try {
-    await team.save();
-  } catch (err) {
-    console.log(err);
-    return next(
-      new HttpError('Something went wrong, could not update team.', 500)
-    );
   }
 
   res.status(200).json({ team: team.toObject({ getters: true }) });

@@ -47,6 +47,7 @@ const signup = async (req, res, next) => {
     password: hashedPassword,
     friends: [],
     teams: [],
+    applications: [],
   });
 
   try {
@@ -141,5 +142,50 @@ const login = async (req, res, next) => {
   });
 };
 
+/* ------------------------------- UPDATE ------------------------------- */
+const updateUser = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError('Invalid inputs passed, please check your data.', 422)
+    );
+  }
+
+  const uid = req.params.uid;
+
+  const { username, email, avatar, friends, teams, applications } = req.body;
+
+  let user;
+  try {
+    user = await User.findById(uid);
+  } catch (err) {
+    console.log(err);
+    return next(new HttpError('Error finding user', 500));
+  }
+
+  if (!user) {
+    return next(new HttpError('Could not find user for the provided id.', 404));
+  }
+
+  user.username = username;
+  user.email = email;
+  user.friends = friends;
+  user.teams = teams;
+  user.applications = applications;
+
+  try {
+    await user.save();
+  } catch (err) {
+    console.log(err);
+    return next(
+      new HttpError('Something went wrong, could not update user.', 500)
+    );
+  }
+
+  res.status(200).json({ user: user.toObject({ getters: true }) });
+};
+
 exports.signup = signup;
 exports.login = login;
+exports.updateUser = updateUser;
