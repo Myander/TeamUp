@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import _ from 'lodash';
 import axios from 'axios';
 import useClickOutside from 'shared/hooks/clickOutside-hook';
+const KEY = process.env.REACT_APP_RAWG_API_KEY;
 
 const Search = () => {
   const [games, setGames] = useState([]);
@@ -10,7 +11,7 @@ const Search = () => {
   const handleChange = e => {
     const options = {
       method: 'GET',
-      url: `https://api.rawg.io/api/games?page_size=8&key=25b4d5b424a243bdb3d34fcc2ec2807d&search=${e.target.value}`,
+      url: `https://api.rawg.io/api/games?page_size=8&key=${KEY}&search=${e.target.value}`,
     };
     axios
       .request(options)

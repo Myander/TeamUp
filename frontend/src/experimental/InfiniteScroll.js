@@ -2,6 +2,7 @@ import React, { useCallback, useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Game, GameLoading } from '../teams/components/Game';
 import Loader from '../shared/components/Loader';
+const KEY = process.env.REACT_APP_RAWG_API_KEY;
 
 const InfiniteScroll = () => {
   const [games, setGames] = useState([]);
@@ -39,7 +40,7 @@ const InfiniteScroll = () => {
   useEffect(() => {
     const options = {
       method: 'GET',
-      url: 'https://api.rawg.io/api/games?page_size=25&key=25b4d5b424a243bdb3d34fcc2ec2807d',
+      url: `https://api.rawg.io/api/games?page_size=25&key=${KEY}`,
     };
     isLoading.current = true;
     axios
