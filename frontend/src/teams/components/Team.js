@@ -57,7 +57,12 @@ export const Team = ({
         </div>
         {team.private ? (
           <SmallButton
-            handleClick={handleApplyToTeam.bind(null, team)}
+            handleClick={handleApplyToTeam.bind(
+              null,
+              team,
+              userId,
+              'testerino'
+            )}
             disabled={!isLoggedIn || member}
           >
             Apply

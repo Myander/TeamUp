@@ -37,8 +37,36 @@ export const Teams = ({ teams, isLoggedIn, token, userId }) => {
     [token, userId]
   );
 
-  const handleApplyToTeam = team => {
-    console.log('team', team);
+  const handleApplyToTeam = (team, userId, text) => {
+    console.log('userId', userId);
+    axios
+      .patch(
+        `http://localhost:5000/api/teams/${team._id}`,
+        {
+          ...team,
+          applications: [
+            ...team.applications,
+            {
+              userId: userId,
+              teamId: team._id,
+              text: text,
+              status: 'pending',
+            },
+          ],
+        },
+        {
+          headers: {
+            Authorization: `bearer ${token}`,
+          },
+        }
+      )
+      .then(res => {
+        console.log('res', res); // update UI to show membership in the team.
+        // handleAddMember(); // need to update member count as well (refactor this)
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   return (
