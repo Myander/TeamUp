@@ -7,7 +7,6 @@ const User = require('../models/User');
 /* ------------------------------- GET TEAM BY ID ------------------------------- */
 const getTeamById = async (req, res, next) => {
   const teamId = req.params.tid;
-  // console.log('teamId:', teamId);
   let team;
   try {
     team = await Team.findById(teamId).populate('members');
@@ -103,7 +102,6 @@ const createTeam = async (req, res, next) => {
 
   const { title, description, game, private } = req.body;
 
-  // console.log('data:', title, description, game, private);
   const createdTeam = new Team({
     title,
     description,
@@ -188,18 +186,6 @@ const updateTeam = async (req, res, next) => {
     );
   }
 
-  /*  
-  
-  {
-    "userId": "619eaaf93ec30d05fd041e01",
-    "teamId": "619ea9fa3ec30d05fd041dff",
-    "text": "PLZ WORK FFS!",
-    "status": "pending",
-  }
-  
-  
-  */
-
   const tid = req.params.tid;
 
   const {
@@ -256,7 +242,7 @@ const updateTeam = async (req, res, next) => {
 
     const userId = addMember ? members[members.length - 1] : removedUserId;
 
-    console.log('userId', userId);
+    //console.log('userId', userId);
 
     try {
       user = await User.findById(userId);

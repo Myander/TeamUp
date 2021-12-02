@@ -60,8 +60,6 @@ mongoose
     });
 
     io.on('connection', socket => {
-      // console.log('client connected', socket.id);
-
       // update chat users when someone joins.
       socket.on('joinTeamChat', ({ teamId, userId, username }) => {
         socket.username = username;
@@ -73,16 +71,13 @@ mongoose
 
       // update chat users when somone leaves.
       socket.on('leaveRoom', ({ room }) => {
-        //console.log('leaving room', socket.id);
         socket.leave(room);
         updateChatMembers(io, room);
       });
 
       socket.on('disconnecting', () => {
-        //console.log('socket disconnecting!!', socket.rooms, socket.id);
         socket.rooms.forEach(room => {
           if (socket.id !== room) {
-            //console.log('item:', room);
             updateChatMembers(io, room, socket.id);
           }
         });

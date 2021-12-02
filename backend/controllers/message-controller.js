@@ -16,7 +16,6 @@ const createMessage = async (req, res, next) => {
   }
 
   const newMessage = new Message(req.body);
-  // console.log('new message', newMessage);
   // emit to
   io.getIO().to(req.body.teamId).emit('newMessage', {
     _id: newMessage._id,
