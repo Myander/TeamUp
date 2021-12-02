@@ -1,8 +1,0 @@
-{
-  "env": {
-    "DB_USER": "user-1",
-    "DB_PASSWORD": "mU7WNdsU3OtmIO85",
-    "DB_NAME": "team-up",
-    "JWT_KEY": "supersecret_dont_share"
-  }
-}
